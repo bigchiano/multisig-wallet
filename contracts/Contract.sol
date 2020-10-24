@@ -1,4 +1,4 @@
-pragma solidity >=0.4.22 <0.7.0;
+pragma solidity ^0.5.11;
 
 contract MultiSigWallet {
     event Deposit(address indexed sender, uint256 amount, uint256 balance);
@@ -51,7 +51,7 @@ contract MultiSigWallet {
         numConfirmationsRequired = _numConfirmationsRequired;
     }
 
-    fallback() external payable {
+    function() external payable {
         emit Deposit(msg.sender, msg.value, address(this).balance);
     }
 
@@ -140,7 +140,7 @@ contract MultiSigWallet {
 
         transaction.executed = true;
 
-        (bool success, ) = transaction.to.call{value: transaction.value}(
+        (bool success, ) = transaction.to.call.value(transaction.value)(
             transaction.data
         );
         require(success, "Tx failed");
